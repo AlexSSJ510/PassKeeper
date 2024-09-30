@@ -1,51 +1,56 @@
 @startuml
 class Usuario {
-    - id: String
-    - nombre: String
-    - email: String
-    - contrasena: String
-    + Usuario()
-    + getId(): String
-    + setId(id: String)
-    + getNombre(): String
-    + setNombre(nombre: String)
-    + getEmail(): String
-    + setEmail(email: String)
-    + getContrasena(): String
-    + setContrasena(contrasena: String)
-}
-
-class Password {
-    - id: String
-    - sitioWeb: String
-    - usuario: String
-    - contrasena: String
-    + Password()
-    + getId(): String
-    + setId(id: String)
-    + getSitioWeb(): String
-    + setSitioWeb(sitioWeb: String)
-    + getUsuario(): String
-    + setUsuario(usuario: String)
-    + getContrasena(): String
-    + setContrasena(contrasena: String)
+    +String nombre
+    +String correo
+    +String obtenerContraseña(servicio: String): Contraseña
+    +cambiarContraseña(servicio: String, nuevaContraseña: String)
 }
 
 class GestorContraseñas {
-    - contraseñas: List<Password>
-    + GestorContraseñas()
-    + agregarContrasena(contrasena: Password)
-    + eliminarContrasena(id: String)
-    + buscarContrasena(sitioWeb: String): Password
-    + listarContrasenas(): List<Password>
+    +agregarContraseña(usuario: Usuario, contraseña: Contraseña)
+    +eliminarContraseña(usuario: Usuario, idContraseña: String)
+    +listarContraseñas(usuario: Usuario): List<Contraseña>
 }
 
-class Seguridad {
-    + encriptar(contrasena: String): String
-    + desencriptar(contrasenaEncriptada: String): String
+class Contraseña {
+    +String id
+    +String servicio
+    +String usuario
+    +String valor
+    +String obtenerValor()
+    +actualizarValor(nuevoValor: String)
 }
 
-Usuario "1" -- "0..*" Password : tiene
-GestorContraseñas "1" -- "0..*" Password : gestiona
-Usuario "1" -- "1" GestorContraseñas : usa
+class AlmacenamientoSeguro {
+    +guardarContraseña(contraseña: Contraseña)
+    +recuperarContraseña(id: String): Contraseña
+    +eliminarContraseña(id: String)
+}
+
+class GeneradorContraseñas {
+    +String generarContraseña(longitud: int, incluirSimbolos: boolean): String
+}
+
+class Auditoria {
+    +registrarAcceso(usuario: Usuario, servicio: String, fecha: Date)
+    +listarRegistros(usuario: Usuario): List<RegistroAuditoria>
+}
+
+class RegistroAuditoria {
+    +String servicio
+    +Date fecha
+    +String accion
+}
+
+class Notificador {
+    +enviarNotificacion(usuario: Usuario, mensaje: String)
+}
+
+Usuario "1" -- "0..*" Contraseña : posee >
+GestorContraseñas "1" -- "1" AlmacenamientoSeguro : utiliza >
+GestorContraseñas "1" -- "0..*" Contraseña : gestiona >
+Usuario "1" -- "0..*" RegistroAuditoria : genera >
+Auditoria "1" -- "0..*" RegistroAuditoria : registra >
+Usuario "1" -- "1" Notificador : recibe >
+GeneradorContraseñas "1" -- "0..*" Contraseña : crea >
 @enduml
