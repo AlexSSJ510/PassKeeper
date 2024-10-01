@@ -6,7 +6,7 @@ Desarrolla una herramienta para que los usuarios puedan almacenar y gestionar su
 | Apellidos y Nombres | Rol |
 |---------------------|-----|
 |Rafael Carpio Fabrizio Alexander|Scrum Master|
-|Meza Cantaro Jose Abel Junior|Produst Owner|
-|Zevallos Melendres Yimer Edison|DEV 01 |
-|Castillo Poves Jose Andres|DEV 02 |
-|Santos Tocas Fernando Javier|DEV 03 |
+|Meza Cantaro Jose Abel Junior|Developer|
+|Zevallos Melendres Yimer Edison|Developer|
+|Castillo Poves Jose Andres|Proyect Manager|
+|Santos Tocas Fernando Javier|Developer |
