@@ -31,12 +31,12 @@ class GeneradorContraseñas {
     +String generarContraseña(longitud: int, incluirSimbolos: boolean): String
 }
 
-class Auditoria {
+class Acciones {
     +registrarAcceso(usuario: Usuario, servicio: String, fecha: Date)
-    +listarRegistros(usuario: Usuario): List<RegistroAuditoria>
+    +listarRegistros(usuario: Usuario): List<RegistroAcciones>
 }
 
-class RegistroAuditoria {
+class RegistroAcciones {
     +String servicio
     +Date fecha
     +String accion
@@ -49,8 +49,24 @@ class Notificador {
 Usuario "1" -- "0..*" Contraseña : posee >
 GestorContraseñas "1" -- "1" AlmacenamientoSeguro : utiliza >
 GestorContraseñas "1" -- "0..*" Contraseña : gestiona >
-Usuario "1" -- "0..*" RegistroAuditoria : genera >
-Auditoria "1" -- "0..*" RegistroAuditoria : registra >
+Usuario "1" -- "0..*" RegistroAcciones : genera >
+Acciones "1" -- "0..*" RegistroAcciones : registra >
 Usuario "1" -- "1" Notificador : recibe >
 GeneradorContraseñas "1" -- "0..*" Contraseña : crea >
 @enduml
+
+'Usuario: Representa a un usuario del sistema, tiene un nombre y correo, puede obtener y cambiar su contraseña'
+'GestorContraseñas: Se encarga de las operaciones relacionadas con las contraseñas, como agregar, eliminar y listar contraseñas de un usuario'
+'Contraseña: Representa una contraseña asociada a un servicio, con métodos para obtener y actualizar el valor de la contraseña'
+'AlmacenamientoSeguro: Maneja la lógica para guardar, recuperar y eliminar contraseñas de forma segura'
+'GeneradorContraseñas: Se encarga de crear contraseñas seguras, con opciones para ajustar la longitud y la inclusión de símbolos'
+'Acciones: Registra el acceso a los servicios por parte de los usuarios, manteniendo un historial de acciones'
+'RegistroAcciones: Representa una entrada en el registro de auditoría, con detalles sobre el servicio, fecha y acción realizada'
+'Notificador: Envía notificaciones a los usuarios, por ejemplo, sobre cambios en sus contraseñas o alertas de seguridad'
+
+
+
+
+
+
+
