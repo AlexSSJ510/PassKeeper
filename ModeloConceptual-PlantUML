@@ -1,59 +1,72 @@
 @startuml
-class Usuario {
-    +String nombre
-    +String correo
-    +String obtenerContraseña(servicio: String): Contraseña
-    +cambiarContraseña(servicio: String, nuevaContraseña: String)
+package "Usuarios y Contraseñas" {
+    class Usuario {
+        +String nombre
+        +String correo
+        +String obtenerContraseña(servicio: String): Contraseña
+        +cambiarContraseña(servicio: String, nuevaContraseña: String)
+    }
+
+    class Contraseña {
+        +String id
+        +String servicio
+        +String usuario
+        +String valor
+        +String obtenerValor()
+        +actualizarValor(nuevoValor: String)
+    }
+
+    Usuario "1" -- "0..*" Contraseña : posee >
 }
 
-class GestorContraseñas {
-    +agregarContraseña(usuario: Usuario, contraseña: Contraseña)
-    +eliminarContraseña(usuario: Usuario, idContraseña: String)
-    +listarContraseñas(usuario: Usuario): List<Contraseña>
+package "Gestión de Contraseñas" {
+    class GestorContraseñas {
+        +agregarContraseña(usuario: Usuario, contraseña: Contraseña)
+        +eliminarContraseña(usuario: Usuario, idContraseña: String)
+        +listarContraseñas(usuario: Usuario): List<Contraseña>
+    }
+
+    class AlmacenamientoSeguro {
+        +guardarContraseña(contraseña: Contraseña)
+        +recuperarContraseña(id: String): Contraseña
+        +eliminarContraseña(id: String)
+    }
+
+    GestorContraseñas "1" -- "1" AlmacenamientoSeguro : utiliza >
+    GestorContraseñas "1" -- "0..*" Contraseña : gestiona >
 }
 
-class Contraseña {
-    +String id
-    +String servicio
-    +String usuario
-    +String valor
-    +String obtenerValor()
-    +actualizarValor(nuevoValor: String)
+package "Acciones y Notificaciones" {
+    class Acciones {
+        +registrarAcceso(usuario: Usuario, servicio: String, fecha: Date)
+        +listarRegistros(usuario: Usuario): List<RegistroAcciones>
+    }
+
+    class RegistroAcciones {
+        +String servicio
+        +Date fecha
+        +String accion
+    }
+
+    class Notificador {
+        +enviarNotificacion(usuario: Usuario, mensaje: String)
+    }
+
+    Usuario "1" -- "0..*" RegistroAcciones : genera >
+    Acciones "1" -- "0..*" RegistroAcciones : registra >
+    Usuario "1" -- "1" Notificador : recibe >
 }
 
-class AlmacenamientoSeguro {
-    +guardarContraseña(contraseña: Contraseña)
-    +recuperarContraseña(id: String): Contraseña
-    +eliminarContraseña(id: String)
+package "Generación de Contraseñas" {
+    class GeneradorContraseñas {
+        +String generarContraseña(longitud: int, incluirSimbolos: boolean): String
+    }
+
+    GeneradorContraseñas "1" -- "0..*" Contraseña : crea >
 }
 
-class GeneradorContraseñas {
-    +String generarContraseña(longitud: int, incluirSimbolos: boolean): String
-}
-
-class Acciones {
-    +registrarAcceso(usuario: Usuario, servicio: String, fecha: Date)
-    +listarRegistros(usuario: Usuario): List<RegistroAcciones>
-}
-
-class RegistroAcciones {
-    +String servicio
-    +Date fecha
-    +String accion
-}
-
-class Notificador {
-    +enviarNotificacion(usuario: Usuario, mensaje: String)
-}
-
-Usuario "1" -- "0..*" Contraseña : posee >
-GestorContraseñas "1" -- "1" AlmacenamientoSeguro : utiliza >
-GestorContraseñas "1" -- "0..*" Contraseña : gestiona >
-Usuario "1" -- "0..*" RegistroAcciones : genera >
-Acciones "1" -- "0..*" RegistroAcciones : registra >
-Usuario "1" -- "1" Notificador : recibe >
-GeneradorContraseñas "1" -- "0..*" Contraseña : crea >
 @enduml
+
 
 'Usuario: Representa a un usuario del sistema, tiene un nombre y correo, puede obtener y cambiar su contraseña'
 'GestorContraseñas: Se encarga de las operaciones relacionadas con las contraseñas, como agregar, eliminar y listar contraseñas de un usuario'
