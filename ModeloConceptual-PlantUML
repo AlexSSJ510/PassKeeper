@@ -1,5 +1,5 @@
 @startuml
-package "Usuarios y Contraseñas" {
+
     class Usuario {
         +String nombre
         +String correo
@@ -9,7 +9,7 @@ package "Usuarios y Contraseñas" {
 
     class Contraseña {
         +String id
-        +String servicio
+        +String redsocial
         +String usuario
         +String valor
         +String obtenerValor()
@@ -17,13 +17,12 @@ package "Usuarios y Contraseñas" {
     }
 
     Usuario "1" -- "0..*" Contraseña : posee >
-}
 
-package "Gestión de Contraseñas" {
     class GestorContraseñas {
         +agregarContraseña(usuario: Usuario, contraseña: Contraseña)
         +eliminarContraseña(usuario: Usuario, idContraseña: String)
         +listarContraseñas(usuario: Usuario): List<Contraseña>
+        
     }
 
     class AlmacenamientoSeguro {
@@ -34,36 +33,23 @@ package "Gestión de Contraseñas" {
 
     GestorContraseñas "1" -- "1" AlmacenamientoSeguro : utiliza >
     GestorContraseñas "1" -- "0..*" Contraseña : gestiona >
-}
 
-package "Acciones y Notificaciones" {
-    class Acciones {
+    class Cambios {
         +registrarAcceso(usuario: Usuario, servicio: String, fecha: Date)
-        +listarRegistros(usuario: Usuario): List<RegistroAcciones>
+        +listarRegistros(usuario: Usuario): List<RegistroDeCambios>
     }
 
-    class RegistroAcciones {
+    class RegistroDeCambios {
         +String servicio
         +Date fecha
-        +String accion
+        +String cambio
+        +String redsocial
     }
 
-    class Notificador {
-        +enviarNotificacion(usuario: Usuario, mensaje: String)
-    }
+    
+    Usuario "1" -- "0..*" RegistroDeCambios : genera >
+    Usuario "1" -- "0..*" Cambios : registra >
 
-    Usuario "1" -- "0..*" RegistroAcciones : genera >
-    Acciones "1" -- "0..*" RegistroAcciones : registra >
-    Usuario "1" -- "1" Notificador : recibe >
-}
-
-package "Generación de Contraseñas" {
-    class GeneradorContraseñas {
-        +String generarContraseña(longitud: int, incluirSimbolos: boolean): String
-    }
-
-    GeneradorContraseñas "1" -- "0..*" Contraseña : crea >
-}
 
 @enduml
 
@@ -72,10 +58,8 @@ package "Generación de Contraseñas" {
 'GestorContraseñas: Se encarga de las operaciones relacionadas con las contraseñas, como agregar, eliminar y listar contraseñas de un usuario'
 'Contraseña: Representa una contraseña asociada a un servicio, con métodos para obtener y actualizar el valor de la contraseña'
 'AlmacenamientoSeguro: Maneja la lógica para guardar, recuperar y eliminar contraseñas de forma segura'
-'GeneradorContraseñas: Se encarga de crear contraseñas seguras, con opciones para ajustar la longitud y la inclusión de símbolos'
-'Acciones: Registra el acceso a los servicios por parte de los usuarios, manteniendo un historial de acciones'
-'RegistroAcciones: Representa una entrada en el registro de auditoría, con detalles sobre el servicio, fecha y acción realizada'
-'Notificador: Envía notificaciones a los usuarios, por ejemplo, sobre cambios en sus contraseñas o alertas de seguridad'
+'Cambios: Registra el acceso a los servicios por parte de los usuarios, manteniendo un historial de acciones'
+'RegistroDeCambios: Representa una entrada en el registro de auditoría, con detalles sobre el servicio, fecha y acción realizada'
 
 
 
