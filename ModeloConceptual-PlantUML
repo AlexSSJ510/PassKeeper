@@ -1,10 +1,9 @@
 @startuml
 
     class Usuario {
+        +String id
         +String nombre
         +String correo
-        +String obtenerContraseña(servicio: String): Contraseña
-        +cambiarContraseña(servicio: String, nuevaContraseña: String)
     }
 
     class Contraseña {
@@ -12,58 +11,38 @@
         +String redsocial
         +String usuario
         +String valor
-        +String obtenerValor()
-        +actualizarValor(nuevoValor: String)
     }
 
-    Usuario "1" -- "0..*" Contraseña : posee >
+    
 
-    class GestorContraseñas {
-        +agregarContraseña(usuario: Usuario, contraseña: Contraseña)
-        +eliminarContraseña(usuario: Usuario, idContraseña: String)
-        +listarContraseñas(usuario: Usuario): List<Contraseña>
-        
+    class Backup {
+        +String usuario
+        +String contraseña
+        +String red Social
     }
 
-    class AlmacenamientoSeguro {
-        +guardarContraseña(contraseña: Contraseña)
-        +recuperarContraseña(id: String): Contraseña
-        +eliminarContraseña(id: String)
-    }
-
-    GestorContraseñas "1" -- "1" AlmacenamientoSeguro : utiliza >
-    GestorContraseñas "1" -- "0..*" Contraseña : gestiona >
+    
 
     class Cambios {
-        +registrarAcceso(usuario: Usuario, servicio: String, fecha: Date)
-        +listarRegistros(usuario: Usuario): List<RegistroDeCambios>
+        +String agregar
+        +String editar
+        +String eliminar
+        +String listar
     }
 
     class RegistroDeCambios {
-        +String servicio
         +Date fecha
         +String cambio
-        +String redsocial
+        +String red social
     }
 
     
     Usuario "1" -- "0..*" RegistroDeCambios : genera >
-    Usuario "1" -- "0..*" Cambios : registra >
+    Usuario "1" -- "0..*" Backup : realiza >
+    Cambios "1" -- "0..*" Contraseña : gestiona >
+    Usuario "1" -- "0..*" Contraseña : posee >
+
 
 
 @enduml
-
-
-'Usuario: Representa a un usuario del sistema, tiene un nombre y correo, puede obtener y cambiar su contraseña'
-'GestorContraseñas: Se encarga de las operaciones relacionadas con las contraseñas, como agregar, eliminar y listar contraseñas de un usuario'
-'Contraseña: Representa una contraseña asociada a un servicio, con métodos para obtener y actualizar el valor de la contraseña'
-'AlmacenamientoSeguro: Maneja la lógica para guardar, recuperar y eliminar contraseñas de forma segura'
-'Cambios: Registra el acceso a los servicios por parte de los usuarios, manteniendo un historial de acciones'
-'RegistroDeCambios: Representa una entrada en el registro de auditoría, con detalles sobre el servicio, fecha y acción realizada'
-
-
-
-
-
-
 
